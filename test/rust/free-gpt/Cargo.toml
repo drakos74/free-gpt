@@ -1,0 +1,14 @@
+[package]
+name = "free-gpt"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+async-openai = "0.10.3"
+tokio = { version = "1.25.0", features = ["full"] }
+futures = "0.3.26"
+rocket = { version = "=0.5.0-rc.3", features = ["json"] }
+serde = { version = "1.0.160", features = ["derive"] }
+
