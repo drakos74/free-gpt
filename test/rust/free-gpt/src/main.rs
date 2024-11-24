@@ -28,7 +28,9 @@ struct Request {
 
 #[launch]
 fn rocket() -> _ {
-    let _ = load("../../gpt.key");
+    // for local run set the correct directory ...
+    // let _ = load("../../gpt.key");
+    let _ = load("gpt.key");
     rocket::build().mount("/", routes![get_gpt, post_gpt])
 }
 
