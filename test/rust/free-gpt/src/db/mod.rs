@@ -1,7 +1,6 @@
 pub mod user {
 
     use rocket::serde::json::serde_json;
-    use std::collections::HashMap;
     use std::fs;
     use std::fs::File;
 
@@ -10,7 +9,6 @@ pub mod user {
     use std::path::Path;
 
     use rand::random;
-    use std::borrow::Borrow;
     use std::convert::TryFrom;
     use std::time::SystemTime;
 
@@ -62,7 +60,7 @@ pub mod user {
             Ok(s) => (),
         }
 
-        let mut user_details: User = match serde_json::from_str(&s) {
+        let user_details: User = match serde_json::from_str(&s) {
             Err(why) => {
                 // NOTE !!! In case of schema change, file contents will be overwritten !!!
                 warn!("could not decode json for {} : {:?}", user, why);
@@ -154,14 +152,14 @@ pub mod user {
             Ok(s) => (),
         }
 
-        let mut user_details: User = match serde_json::from_str(&s) {
+        let user_details: User = match serde_json::from_str(&s) {
             Err(why) => {
                 warn!("could not decode json for {} : {:?}", user, why);
                 User {
                     conversations: vec![],
                 }
             }
-            Ok(User) => User,
+            Ok(user) => user,
         };
 
         return user_details;

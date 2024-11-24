@@ -2,7 +2,6 @@ pub mod text {
 
     use crate::db::user::History;
 
-    use async_openai::types::CreateChatCompletionRequest;
     use async_openai::{
         types::{
             ChatCompletionRequestMessage, ChatCompletionRequestMessageArgs,
@@ -10,7 +9,6 @@ pub mod text {
         },
         Client,
     };
-    use futures::StreamExt;
     use std::error::Error;
 
     pub async fn chat(request: &str, history: &Vec<History>) -> Result<String, Box<dyn Error>> {

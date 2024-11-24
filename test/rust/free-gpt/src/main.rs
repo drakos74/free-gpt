@@ -30,6 +30,11 @@ struct Request {
 
 #[launch]
 fn rocket() -> _ {
+    // Get the current working directory
+    match env::current_dir() {
+        Ok(path) => println!("Current directory: {}", path.display()),
+        Err(e) => eprintln!("Error: {}", e),
+    }
     let _ = load("../../gpt.key");
     rocket::build().mount("/", routes![get_gpt, post_gpt])
 }

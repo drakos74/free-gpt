@@ -2,7 +2,6 @@ pub mod file {
     use std::env;
     use std::fs::File;
     use std::io::{self, BufRead};
-    use std::path::Path;
 
     pub fn load(filename: &str) -> io::Result<()> {
         // Open the file in read-only mode
