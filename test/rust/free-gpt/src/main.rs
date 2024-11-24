@@ -2,8 +2,11 @@
 extern crate rocket;
 
 mod db;
+mod env;
 mod gpt_api;
 mod prompts;
+
+use crate::env::file::load;
 
 use crate::db::user::get;
 use crate::db::user::put;
@@ -27,6 +30,7 @@ struct Request {
 
 #[launch]
 fn rocket() -> _ {
+    let _ = load("../../gpt.key");
     rocket::build().mount("/", routes![get_gpt, post_gpt])
 }
 
@@ -41,18 +45,23 @@ async fn get_gpt(user: &str, request: &str) -> String {
 async fn post_gpt(user: &str, request: Json<Request>) -> String {
     // first get the users conversation
     let conversation = get(user, request.title.to_string(), request.input.to_string());
+    // info!("{:?}", conversation);
     // read the content from the request
     let content = request.input.as_str();
     // apply prompts ...
     let message = greet(user, content);
     // send request ...
     let response = chat(&message, &conversation.messages);
-    let response_message = response.await.unwrap_or("error".to_string());
+    let response_message = response.await.unwrap_or_else(|e| {
+        let error_response = format!("Error : {}", e);
+        error_response.to_string()
+    });
     let response_history = History {
         message: request.input.to_string(),
         response: response_message.clone(),
     };
-    put(user, conversation, response_history);
+    // TODO : get the limit from the user settings
+    put(user, 3, conversation, response_history);
     // open response ...
     return response_message.clone();
 }
