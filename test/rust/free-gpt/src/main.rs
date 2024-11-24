@@ -16,8 +16,6 @@ use crate::db::user::History;
 use crate::gpt_api::text::chat;
 use crate::prompts::user::greet;
 
-use std::io::{stdout, Write};
-
 use rocket::serde::json::Json;
 use serde::{Deserialize, Serialize};
 
@@ -30,11 +28,6 @@ struct Request {
 
 #[launch]
 fn rocket() -> _ {
-    // Get the current working directory
-    match env::current_dir() {
-        Ok(path) => println!("Current directory: {}", path.display()),
-        Err(e) => eprintln!("Error: {}", e),
-    }
     let _ = load("../../gpt.key");
     rocket::build().mount("/", routes![get_gpt, post_gpt])
 }
@@ -43,7 +36,7 @@ fn rocket() -> _ {
 async fn get_gpt(user: &str, request: &str) -> String {
     let history = Vec::new();
     let respone = chat(request, &history);
-    return respone.await.unwrap_or("error".to_string());
+    return respone.await.unwrap_or(format!("error for {}", user));
 }
 
 #[post("/free-gpt/v1/<user>", format = "json", data = "<request>")]

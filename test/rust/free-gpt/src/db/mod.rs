@@ -9,7 +9,6 @@ pub mod user {
     use std::path::Path;
 
     use rand::random;
-    use std::convert::TryFrom;
     use std::time::SystemTime;
 
     const FILE_EXTENSION: &str = "json";
@@ -36,7 +35,7 @@ pub mod user {
         conversations: Vec<Conversation>,
     }
 
-    pub fn get(user: &str, description: String, content: String) -> Conversation {
+    pub fn get(user: &str, description: String, _content: String) -> Conversation {
         let path: String = FILE_STORAGE.to_owned() + "/" + user + "." + FILE_EXTENSION;
         // Create a directory to the desired file
         let directory = Path::new(&path);
@@ -57,7 +56,7 @@ pub mod user {
             Err(why) => {
                 warn!("could not read file for {} : {:?}", user, why);
             }
-            Ok(s) => (),
+            Ok(_s) => (),
         }
 
         let user_details: User = match serde_json::from_str(&s) {
@@ -68,7 +67,7 @@ pub mod user {
                     conversations: vec![],
                 }
             }
-            Ok(User) => User,
+            Ok(user) => user,
         };
 
         let mut conversation = Conversation {
@@ -113,7 +112,7 @@ pub mod user {
         } else {
             // otherwise lets put it back into the same spot
             conversation.requests = conversation.requests + 1;
-            std::mem::replace(
+            let _ = std::mem::replace(
                 &mut user_details.conversations[conversation.index],
                 conversation.clone(),
             );
@@ -149,7 +148,7 @@ pub mod user {
             Err(why) => {
                 warn!("could not read file for {} : {:?}", user, why);
             }
-            Ok(s) => (),
+            Ok(_s) => (),
         }
 
         let user_details: User = match serde_json::from_str(&s) {

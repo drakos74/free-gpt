@@ -4,6 +4,11 @@ pub mod file {
     use std::io::{self, BufRead};
 
     pub fn load(filename: &str) -> io::Result<()> {
+        // Get the current working directory
+        match env::current_dir() {
+            Ok(path) => println!("Current directory: {}", path.display()),
+            Err(e) => eprintln!("Error: {}", e),
+        }
         // Open the file in read-only mode
         let file = File::open(filename).or_else(|e| {
             println!("Error occurred: {}", e); // Custom handling of error
